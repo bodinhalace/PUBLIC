@@ -1,1 +1,1 @@
-simple script to open cd using arduino
+simple script to open cmd using arduino
