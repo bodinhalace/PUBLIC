@@ -10,7 +10,7 @@
 
 // Wi-Fi credentials
 const char* ssid = "ssid_of_your_net";
-const char* password = "password_to_your_ne";
+const char* password = "password_to_your_network";
 // end of wifi credent...
 #define DHTPIN 19          // GPIO where DHT11 is connected
 #define DHTTYPE DHT11      // Type of DHT in my case DHT11
