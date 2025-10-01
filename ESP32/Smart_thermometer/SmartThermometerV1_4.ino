@@ -205,5 +205,5 @@ void setup() {
 
 void loop() {
   server.handleClient(); // call function of webserver.
-ondisplay();
+  ondisplay();
 }
