@@ -10,7 +10,7 @@
 
 // Wi-Fi credentials
 const char* ssid = "ssid_of_your_net";
-const char* password = "password_to_your_network";
+const char* password = "passwd_to_your_net";
 // end of wifi credent...
 #define DHTPIN 19          // GPIO where DHT11 is connected
 #define DHTTYPE DHT11      // Type of DHT in my case DHT11
@@ -176,6 +176,12 @@ void setup() {
   dht.begin();
   Serial.println("inicializuji Dislplay...");
   display.begin();
+  display.clearDisplay();
+  display.setContrast(60);
+  display.setTextSize(2);
+  display.setCursor(0, 0);
+  display.println("BOOT...");
+  display.display(); 
   Serial.println("inicializuji BMP180...");
   if (!bmp.begin()) {
 	Serial.println("nelze nalezt BMP085/BMP180 sensor, zkontroluj pripojeni");
@@ -205,5 +211,8 @@ void setup() {
 
 void loop() {
   server.handleClient(); // call function of webserver.
+  delay(500);
   ondisplay();
+  delay(500);
+
 }
