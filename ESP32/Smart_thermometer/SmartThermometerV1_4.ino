@@ -162,7 +162,7 @@ void handleRoot() {
   html += "</body></html>";
 
   server.send(200, "text/html", html);
-  ondisplay();
+  
 }
 
 
@@ -204,5 +204,6 @@ void setup() {
 }
 
 void loop() {
-  server.handleClient(); // call function of webserver. This function calling ondisplay() funtion which show Data on nokia 5110 display
+  server.handleClient(); // call function of webserver.
+ondisplay();
 }
