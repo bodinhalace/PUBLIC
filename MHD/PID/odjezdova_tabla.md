@@ -9,7 +9,6 @@ _____
 |blank|blank|blank|blank|[]()|
 |blank|blank|blank|blank|[]()|
 
-____
 
 # Legenda
 ______
