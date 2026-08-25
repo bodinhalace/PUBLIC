@@ -2,7 +2,7 @@
 
 _____
 
-|Město|Zastávka|Směr|Linky|Tablo|
+|Město|Nástupište|Směr|Linky|Tablo|
 |:---|:---:|:---|:---|:---:|
 |blank|blank|blank|blank|[]()|
 |blank|blank|blank|blank|[]()|
