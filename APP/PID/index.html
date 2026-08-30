@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>PID Odjezdové tabule</title>
+    <style>
+        body { font-family: Consolas, monospace; padding: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 6px; }
+        input, select { margin: 5px; padding: 5px; }
+        button { padding: 6px 12px; margin: 5px; }
+    	* {
+        -webkit-user-select: text !important;
+        user-select: text !important;
+    	}
+    </style>
+</head>
+<body>
+
+<h2>PID: Odjezdová tabla</h2>
+
+<label>Režim:</label>
+<select id="mode">
+    <option value="fulltext">Fulltext</option>
+    <option value="name">Line</option>
+    <option value="alt">StopName</option>
+    <option value="direction">direction</option>
+    <option value="gtfs">gtfs</option>
+    <option value="platform">platform</option>
+    <option value="regex">regex</option>
+</select>
+
+<br>
+
+<label>Dotaz:</label>
+<input id="query" style="width:300px">
+
+<button onclick="runSearch()">Hledat</button>
+
+<table id="results"></table>
+
+<hr>
+
+<h3>Vytvořit URL Odjezové tabule</h3>
+
+<input id="gtfs" placeholder="GTFS ID oddělené čárkou">
+<input id="title" placeholder="Title" value="Odjezdy">
+<input id="subtitle" placeholder="Subtitle" value="MHD">
+
+<button onclick="makeUrl()">Vytvořit URL</button>
+
+<p id="url"></p>
+
+<button onclick="openTablo()">Zobrazit tablo</button>
+
+<script>
+    let lastURL = null;
+
+    function runSearch() {
+        let mode = document.getElementById("mode").value;
+        let query = document.getElementById("query").value;
+
+        window.pywebview.api.search(mode, query).then(data => {
+            let html = "<tr><th>Line</th><th>Alt</th><th>Dir</th><th>GTFS</th><th>Platform</th></tr>";
+            data.forEach(row => {
+                html += `<tr>
+                    <td>${row[0]}</td>
+                    <td>${row[1]}</td>
+                    <td>${row[2]}</td>
+                    <td>${row[3]}</td>
+                    <td>${row[4]}</td>
+                </tr>`;
+            });
+            document.getElementById("results").innerHTML = html;
+        });
+    }
+
+    function makeUrl() {
+        let gtfs = document.getElementById("gtfs").value.split(",").map(x => x.trim());
+        let title = document.getElementById("title").value;
+        let subtitle = document.getElementById("subtitle").value;
+
+        window.pywebview.api.build_url(gtfs, title, subtitle).then(url => {
+            lastURL = url;
+            document.getElementById("url").innerText = url;
+        });
+    }
+
+    function openTablo() {
+        if (!lastURL) {
+            alert("Nejdřív vytvoř URL.");
+            return;
+        }
+        window.pywebview.api.open_tablo(lastURL);
+    }
+</script>
+
+</body>
+</html>
