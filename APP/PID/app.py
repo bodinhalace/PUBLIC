@@ -55,14 +55,9 @@ class API:
         return url
     def open_tablo(self, url):
       
-        w = webview.create_window("PID Tablo", url)
+        w = webview.create_window("PID Tablo", url, zoomable=True)
 
        
-        def apply_zoom():
-            w.evaluate_js("document.body.style.zoom = '100%'")
-
-       
-        w.events.loaded += apply_zoom
 
 
 html_file = os.path.join(os.path.dirname(__file__), "index.html")
