@@ -50,7 +50,7 @@ class API:
 
         url = (
             f"https://data.pid.cz/departures/?ids={ids_encoded}"
-            f"&limit=15&title={title_encoded}&subtitle={subtitle_encoded}&minutesBefore=0"
+            f"&limit=15&title={title_encoded}&subtitle={subtitle_encoded}&minutesBefore=0"    #in future add &format=time
         )
         return url
     def open_tablo(self, url):
