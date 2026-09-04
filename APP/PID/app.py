@@ -92,7 +92,7 @@ if __name__ == '__main__':
     console.print(Panel("AUTOR: bodinhalace \nVERSION: 1.2\napp running!!! Do not close this window!!\nWARNING: This is not oficial aplication provided by PID (Pražská Integrovaná Doprava)"))
    # print("app running!!! Do not close this window!!")
    # print("WARNING: This is not oficial aplication provided by PID (Pražská Integrovaná Doprava)")
-    window = webview.create_window("PID Web Console", html=html_content, js_api=API(), width=1024, height=768)
+    window = webview.create_window("PID Web Console", html=html_content, js_api=API(), width=1024, height=530)
 
     webview.start(icon='app.ico')
     os.system("cls")
