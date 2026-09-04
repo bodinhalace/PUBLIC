@@ -5,8 +5,13 @@ import re
 import json
 import os
 import time
+from rich.console import Console                     #TUI 
+from rich.table import Table                         #TUI LIB
+from rich.panel import Panel                         #TUI LIB
+from rich import print as rp  
 
-
+console = Console(style="green1 on black")
+console2 = Console(style="red on black")
 tree = ET.parse("StopsByName.xml")
 root = tree.getroot()
 
@@ -50,7 +55,7 @@ class API:
 
         url = (
             f"https://data.pid.cz/departures/?ids={ids_encoded}"
-            f"&limit=15&title={title_encoded}&subtitle={subtitle_encoded}&minutesBefore=0"    #in future add &format=time
+            f"&limit=15&title={title_encoded}&subtitle={subtitle_encoded}&minutesBefore=0"    
         )
         return url
         
@@ -62,7 +67,7 @@ class API:
 
         url2 = (
             f"https://data.pid.cz/departures/?ids={ids_encoded}"
-            f"&limit=15&title={title_encoded}&subtitle={subtitle_encoded}&minutesBefore=0&format=time"    #in future add &format=time
+            f"&limit=15&title={title_encoded}&subtitle={subtitle_encoded}&minutesBefore=0&format=time"    
         )
         return url2
         
@@ -82,12 +87,18 @@ with open(html_file, "r", encoding="utf-8") as f:
 
 
 if __name__ == '__main__':
+    os.system("cls")
+    os.system("color 0a")
+    console.print(Panel("AUTOR: bodinhalace \nVERSION: 1.2\napp running!!! Do not close this window!!\nWARNING: This is not oficial aplication provided by PID (Pražská Integrovaná Doprava)"))
+   # print("app running!!! Do not close this window!!")
+   # print("WARNING: This is not oficial aplication provided by PID (Pražská Integrovaná Doprava)")
+    window = webview.create_window("PID Web Console", html=html_content, js_api=API(), width=1024, height=768)
 
-    print("app running!!! Do not close this window!!")
-    print("WARNING: This is not oficial aplication provided by PID (Pražská Integrovaná Doprava)")
-    window = webview.create_window("PID Web Console", html=html_content, js_api=API())
-
-    webview.start()
-    print("app termination signal received! Please wait, this window will be closed automatically")
+    webview.start(icon='app.ico')
+    os.system("cls")
+    os.system("color 04")
+    console2.print(Panel("[red]app termination signal received! Please wait, this window will be closed automatically[/red]"))
     time.sleep(3)
+    os.system("cls")
+    os.system("color 0f")
   
