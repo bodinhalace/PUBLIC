@@ -50,8 +50,9 @@
 <button onclick="makeUrl()">Vytvořit URL</button>
 
 <p id="url"></p>
-
+<p id="url2"></p>
 <button onclick="openTablo()">Zobrazit tablo</button>
+<button onclick="openTablo_2()">Zobrazit tablo (time & delay)</button>
 
 <script>
     let lastURL = null;
@@ -84,6 +85,11 @@
             lastURL = url;
             document.getElementById("url").innerText = url;
         });
+		
+		window.pywebview.api.build_url_time(gtfs, title, subtitle).then(url => {
+            lastURL2 = url;
+            document.getElementById("url2").innerText = url;
+        });
     }
 
     function openTablo() {
@@ -92,6 +98,13 @@
             return;
         }
         window.pywebview.api.open_tablo(lastURL);
+    }
+	function openTablo_2() {
+        if (!lastURL2) {
+            alert("Nejdřív vytvoř URL2.");
+            return;
+        }
+        window.pywebview.api.open_tablo_2(lastURL2);
     }
 </script>
 

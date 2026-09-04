@@ -53,9 +53,25 @@ class API:
             f"&limit=15&title={title_encoded}&subtitle={subtitle_encoded}&minutesBefore=0"    #in future add &format=time
         )
         return url
+        
+        
+    def build_url_time(self, gtfs_list, title, subtitle):
+        ids_encoded = urllib.parse.quote(";".join(gtfs_list))
+        title_encoded = urllib.parse.quote(title)
+        subtitle_encoded = urllib.parse.quote(subtitle)
+
+        url2 = (
+            f"https://data.pid.cz/departures/?ids={ids_encoded}"
+            f"&limit=15&title={title_encoded}&subtitle={subtitle_encoded}&minutesBefore=0&format=time"    #in future add &format=time
+        )
+        return url2
+        
     def open_tablo(self, url):
       
         w = webview.create_window("PID Tablo", url, zoomable=True)
+    def open_tablo_2(self, url2):
+      
+        w = webview.create_window("PID Tablo (time&delay)", url2, zoomable=True)    
 
        
 
