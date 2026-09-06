@@ -2,5 +2,5 @@
 
 Open cmd and run following commands :
 
-pip install rich
+pip install rich  
 pip install pywebview
