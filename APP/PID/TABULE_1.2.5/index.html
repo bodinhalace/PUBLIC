@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>PID Odjezdové tabule</title>
+	<style>
+        /* === GLOBAL === */
+        body {
+            font-family: Consolas, monospace;
+            padding: 20px;
+            background: #B3B2AD; /* světlejší PID šedá */
+            color: #2b2b2c;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        h1 {
+            color: #e2001a;
+            font-size: 32px;
+            margin-bottom: 10px;
+            animation: slideIn 0.6s ease-out;
+			text-align:center;
+        }
+		h3 {
+            color: #e2001a;
+            font-size: 32px;
+            margin-bottom: 10px;
+            animation: slideIn 0.6s ease-out;
+			text-align:center;
+        }
+
+        label {
+            font-size: 18px;
+            color: #2b2b2c;
+        }
+
+        input, select {
+            margin: 5px;
+            padding: 6px 10px;
+            background: #d6d5d2; /* světlejší šedá */
+            border: 1px solid #e2001a;
+            color: #2b2b2c;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 10px #e2001a;
+        }
+
+        button {
+            padding: 6px 14px;
+            margin: 5px;
+            background: #e2001a;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            animation: pulse 2s infinite;
+        }
+
+        button:hover {
+            background: #ff2a3a;
+            transform: translateY(-2px);
+            box-shadow: 0 0 12px #e2001a;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        th {
+            background: #e2001a;
+            color: #ffffff;
+            border: 1px solid #b3b2ad;
+            padding: 8px;
+            font-size: 18px;
+        }
+
+        td {
+            border: 1px solid #8c8b87;
+            padding: 6px;
+            background: #d6d5d2;
+            transition: 0.2s;
+        }
+
+        tr:hover td {
+            background: #c9c8c4;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #e2001a;
+            margin: 25px 0;
+            animation: fadeIn 1s ease-out;
+        }
+
+        #url, #url2, #notify{
+            margin-top: 10px;
+            padding: 10px;
+            background: #d6d5d2;
+            border-left: 5px solid #e2001a;
+            border-radius: 4px;
+            animation: slideIn 0.5s ease-out;
+            color: #2b2b2c;
+        }
+
+        /* === ANIMACE === */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0px #e2001a; }
+            50% { box-shadow: 0 0 12px #e2001a; }
+            100% { box-shadow: 0 0 0px #e2001a; }
+        }
+
+        * {
+            -webkit-user-select: text !important;
+            user-select: text !important;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Prohlížet data (PID)</h1>
+
+<label>Režim:</label>
+<select id="mode">
+    <option value="fulltext">Fulltext</option>
+    <option value="name">Line</option>
+    <option value="alt">StopName</option>
+    <option value="direction">direction</option>
+    <option value="gtfs">gtfs</option>
+    <option value="platform">platform</option>
+    <option value="regex">regex</option>
+</select>
+
+<br>
+
+<label>Dotaz:</label>
+<input id="query" style="width:300px">
+
+<button onclick="runSearch()">Hledat</button>
+
+<table id="results"></table>
+
+<hr>
+
+<h3>Vytvořit odjezové tabule</h3>
+
+<input id="gtfs" placeholder="GTFS ID oddělené čárkou">
+<input id="title" placeholder="Title" value="Odjezdy">
+<input id="subtitle" placeholder="Subtitle" value="MHD">
+
+<button onclick="makeUrl()">Vytvořit URL</button>
+
+<p id="url"></p>
+<p id="url2"></p>
+<button onclick="openTablo()">Zobrazit tablo</button>
+<button onclick="openTablo_2()">Zobrazit tablo (time & delay)</button>
+<button onclick="openTablo_fs()">Zobrazit tablo [fullscreen]</button>
+<button onclick="openTablo_2_fs()">Zobrazit tablo (time & delay)[fullscreen]</button>
+<p id="notify">Pokud použijete mód fullscreen, použijte ALT+TAB k přepnutí okna; ALT+F4 k jeho uzavření</p>
+
+<script>
+    let lastURL = null;
+
+    function runSearch() {
+        let mode = document.getElementById("mode").value;
+        let query = document.getElementById("query").value;
+
+        window.pywebview.api.search(mode, query).then(data => {
+            let html = "<tr><th>Line</th><th>Alt</th><th>Dir</th><th>GTFS</th><th>Platform</th></tr>";
+            data.forEach(row => {
+                html += `<tr>
+                    <td>${row[0]}</td>
+                    <td>${row[1]}</td>
+                    <td>${row[2]}</td>
+                    <td>${row[3]}</td>
+                    <td>${row[4]}</td>
+                </tr>`;
+            });
+            document.getElementById("results").innerHTML = html;
+        });
+    }
+
+    function makeUrl() {
+        let gtfs = document.getElementById("gtfs").value.split(",").map(x => x.trim());
+        let title = document.getElementById("title").value;
+        let subtitle = document.getElementById("subtitle").value;
+
+        window.pywebview.api.build_url(gtfs, title, subtitle).then(url => {
+            lastURL = url;
+            document.getElementById("url").innerText = url;
+        });
+		
+		window.pywebview.api.build_url_time(gtfs, title, subtitle).then(url => {
+            lastURL2 = url;
+            document.getElementById("url2").innerText = url;
+        });
+    }
+
+    function openTablo() {
+        if (!lastURL) {
+            alert("Nejdřív vytvoř URL.");
+            return;
+        }
+        window.pywebview.api.open_tablo(lastURL);
+    }
+	function openTablo_2() {
+        if (!lastURL2) {
+            alert("Nejdřív vytvoř URL2.");
+            return;
+        }
+        window.pywebview.api.open_tablo_2(lastURL2);
+    }
+    function openTablo_fs() {
+        if (!lastURL) {
+            alert("Nejdřív vytvoř URL.");
+            return;
+        }
+        window.pywebview.api.open_tablo_fs(lastURL);
+    }
+	function openTablo_2_fs() {
+        if (!lastURL2) {
+            alert("Nejdřív vytvoř URL2.");
+            return;
+        }
+        window.pywebview.api.open_tablo_2_fs(lastURL2);	
+	}
+</script>
+
+</body>
+</html>
